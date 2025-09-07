@@ -13,4 +13,4 @@ dist/
 
 datasets/
 # or specifically
-datasets/emails.csv
+datasets/processed_emails.csv
