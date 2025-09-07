@@ -2,11 +2,11 @@ import gdown
 import os
 
 # Google Drive file ID
-file_id = '1aby-qlnagD3KD0ZZ1LB6zbbIeNHyAlVC'
+file_id = '1jm5jlnIG6UxN8p_8C5j1OUOdpiCLnSaH'
 url = f'https://drive.google.com/uc?id={file_id}'
 
 # Local path to save dataset
-output_path = 'datasets/emails.csv'
+output_path = 'datasets/processed_emails.csv'
 
 # Create datasets folder if it doesn't exist
 os.makedirs('datasets', exist_ok=True)
