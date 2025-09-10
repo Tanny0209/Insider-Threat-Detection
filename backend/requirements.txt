@@ -1,0 +1,11 @@
+fastapi
+uvicorn[standard]
+pydantic
+torch
+torch-geometric
+numpy
+pandas
+scikit-learn
+networkx
+pymongo
+requests
