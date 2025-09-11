@@ -1,17 +1,43 @@
+# ====================
 # Python
+# ====================
 venv/
 __pycache__/
 *.pyc
+*.pyo
+*.pyd
 
+.venv/
+# ====================
 # React / frontend
+# ====================
 node_modules/
 build/
 dist/
 
+# ====================
 # VSCode
+# ====================
 .vscode/
 
-datasets/
-# or specifically
-datasets/processed_emails.csv
- 
+# ====================
+# Logs
+# ====================
+*.log
+
+# ====================
+# Raw/intermediate datasets
+# Ignore all CSVs except Final_Emails.csv
+# ====================
+backend/app/data/Final_Emails.csv
+
+# ====================
+# Jupyter Notebook checkpoints
+# ====================
+.ipynb_checkpoints
+
+# ====================
+# OS files
+# ====================
+.DS_Store
+Thumbs.db
