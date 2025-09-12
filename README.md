@@ -22,7 +22,7 @@ http://127.0.0.1:8000/redoc
 
 
 <!-- Requiremnet.txt run -->
-pip install -r requirements.tx
+pip install -r requirements.txt
 
 <!-- And All necesary modules to Requirement.txt -->
 pip freeze > requirements.txt
