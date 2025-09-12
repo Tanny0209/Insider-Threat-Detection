@@ -1,32 +1,26 @@
 import os
 import gdown
-import requests
-from bs4 import BeautifulSoup
 
 # --- Settings ---
 FOLDER_URL = "https://drive.google.com/drive/folders/176Y2RedBqGd063bEJq0uJmb7Fsfr-ehl"
 OUTPUT_DIR = "./backend/app/data"
 os.makedirs(OUTPUT_DIR, exist_ok=True)
 
-# --- Get local file names ---
+# --- List files locally ---
 local_files = set(os.listdir(OUTPUT_DIR))
 
-# --- Scrape shared folder page ---
-print("🔍 Fetching file list from Google Drive folder...")
-response = requests.get(FOLDER_URL)
-soup = BeautifulSoup(response.text, "html.parser")
-
-# --- Extract file IDs and names ---
-# gdrive folder public pages have links with "/uc?id=<file_id>"
-drive_files = {}
-for a in soup.find_all("a"):
-    href = a.get("href", "")
-    if "uc?id=" in href:
-        file_id = href.split("uc?id=")[1].split("&")[0]
-        file_name = a.text.strip()
-        drive_files[file_id] = file_name
-
-print(f"Found {len(drive_files)} files in the Drive folder.\n")
+# --- List of files with Google Drive IDs (can be obtained from shared folder) ---
+drive_files = {
+    "18c-bfSXd29xqFrtQouFqWbYwrcj_Iimb": "edges.pkl",
+    "1lrrUv1geuP6wZ3QI56TUqZ1FP__FwVA6": "Emails.csv",
+    "1O-3zOYrcylGwzXmWCK6scZByVet7wE_-": "node_mapping.pkl",
+    "17SkkAlMYToyE1J7mlER6z_NlYimq3hKa": "pyg_graph_basic.pt",
+    "1GQcCVcmkLOn7cBNItE6CkvKQNPwrzCbF": "pyg_graph_full.pt",
+    "1wCj9fO04j2k7QeRLRn1k9YRrMh8pIjm9": "pyg_graph.pt",
+    "1cMzn2JUUgTPzj8zgtF7C3g07SJhlphpI": "top_attachment_types.pkl",
+    "1kKilSBRcb5xHnm7FYqYxILhgKEEEDM2Z": "top_domains.pkl",
+    "1mDiViFOQcjSZ9l7S8xADGltXgaLUUWSR": "user_graph.pkl",
+}
 
 # --- Download missing files only ---
 for file_id, file_name in drive_files.items():
