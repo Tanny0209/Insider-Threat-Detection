@@ -30,7 +30,7 @@ dist/
 # Ignore all CSVs except Final_Emails.csv
 # ====================
 backend/app/data/*
-!backend\app\data\download_dataset.py
+!backend/app/data/download_data.py
 # ====================
 # Jupyter Notebook checkpoints
 # ====================
