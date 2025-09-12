@@ -2,10 +2,10 @@ import gdown
 import os
 
 # Google Drive file ID
-file_id = "1rPRHQzE8U3Vox2JSuIK6Bo2pgEhk86lb"
+file_id = "1lrrUv1geuP6wZ3QI56TUqZ1FP__FwVA6"
 
 # Output path
-output_path = "backend/app/data/Final_Emails.csv"
+output_path = "backend/app/data/Emails.csv"
 
 # Create directory if it doesn't exist
 os.makedirs(os.path.dirname(output_path), exist_ok=True)

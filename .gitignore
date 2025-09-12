@@ -29,8 +29,8 @@ dist/
 # Raw/intermediate datasets
 # Ignore all CSVs except Final_Emails.csv
 # ====================
-backend/app/data/Final_Emails.csv
-
+backend/app/data/*
+!backend\app\data\download_dataset.py
 # ====================
 # Jupyter Notebook checkpoints
 # ====================
