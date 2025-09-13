@@ -4,22 +4,27 @@ import Sidebar from "./components/Sidebar";
 import Dashboard from "./pages/Dashboard";
 import RiskHeatmapPage from "./pages/RiskHeatmapPage";
 import CommunicationGraph from "./components/CommunicationGraph";
+import IntroScreen from "./components/IntroScreen";
 import UserProfilesPage from "./pages/UserProfiles";
-
-const ComingSoon = ({ title }) => (
-  <div className="text-center text-gray-400 mt-20 text-lg font-mono">
-    ⚡ {title} module is still under construction…
-  </div>
-);
 
 const App = () => {
   const [currentPage, setCurrentPage] = useState("Dashboard");
   const [currentTime, setCurrentTime] = useState(new Date());
+  const [showIntro, setShowIntro] = useState(true); 
 
   useEffect(() => {
     const timer = setInterval(() => setCurrentTime(new Date()), 1000);
     return () => clearInterval(timer);
   }, []);
+
+  useEffect(() => {
+    const timer = setTimeout(() => setShowIntro(false), 8000);
+    return () => clearTimeout(timer);
+  }, []);
+
+  if (showIntro) {
+    return <IntroScreen />;
+  }
 
   const renderPage = () => {
     switch (currentPage) {
@@ -27,12 +32,12 @@ const App = () => {
         return <Dashboard />;
       case "Risk Heatmap":
         return <RiskHeatmapPage />;
-      case "User Profiles":
-        return <UserProfilesPage/>;
       case "Communication":
         return <CommunicationGraph />;
+          case "User Profiles":
+        return <UserProfilesPage />;
       default:
-        return <ComingSoon title={currentPage} />;
+        return <div>Coming Soon...</div>;
     }
   };
 
