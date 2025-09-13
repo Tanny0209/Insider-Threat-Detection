@@ -1,24 +1,32 @@
-export default function RiskHeatmap() {
-  const departments = ["HR", "IT", "Finance", "Sales"];
-  const levels = ["Low", "Medium", "High"];
+import React from "react";
 
+const data = [
+  { dept: "HR", low: "🟩", med: "🟨", high: "🟧" },
+  { dept: "IT", low: "🟩", med: "🟨", high: "🟥" },
+  { dept: "Finance", low: "🟩", med: "🟧", high: "🟥" },
+  { dept: "Sales", low: "🟨", med: "🟧", high: "🟥" },
+];
+
+export default function RiskHeatmap() {
   return (
-    <div className="bg-gray-800 p-4 rounded-lg text-white">
-      <h3 className="mb-2">Risk Heatmap</h3>
-      <table className="w-full text-center">
+    <div className="bg-gray-800 p-4 rounded-xl shadow-md">
+      <h3 className="font-semibold mb-3">Risk Heatmap</h3>
+      <table className="w-full text-center text-sm">
         <thead>
           <tr>
-            <th>Department</th>
-            {levels.map(level => <th key={level}>{level}</th>)}
+            <th className="py-2">Department</th>
+            <th>Low</th>
+            <th>Medium</th>
+            <th>High</th>
           </tr>
         </thead>
         <tbody>
-          {departments.map(dep => (
-            <tr key={dep}>
-              <td>{dep}</td>
-              {levels.map((_, i) => (
-                <td key={i} className={`p-2 ${i === 0 ? "bg-green-600" : i === 1 ? "bg-yellow-500" : "bg-red-600"}`}></td>
-              ))}
+          {data.map((row) => (
+            <tr key={row.dept}>
+              <td className="py-2">{row.dept}</td>
+              <td>{row.low}</td>
+              <td>{row.med}</td>
+              <td>{row.high}</td>
             </tr>
           ))}
         </tbody>

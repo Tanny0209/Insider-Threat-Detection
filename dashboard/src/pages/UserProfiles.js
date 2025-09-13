@@ -1,25 +1,16 @@
-import React, { useEffect, useState } from "react";
-import { getUsers } from "../services/users";
+import React from "react";
 
-function Users() {
-  const [users, setUsers] = useState([]);
-
-  useEffect(() => {
-    getUsers()
-      .then((res) => setUsers(res.data))
-      .catch(() => setUsers([{ name: "John Doe", risk: "High" }]));
-  }, []);
-
+function UserProfiles() {
   return (
-    <div>
-      <h2>Users</h2>
-      <ul>
-        {users.map((u, i) => (
-          <li key={i}>{u.name} - Risk: {u.risk}</li>
-        ))}
+    <div className="users">
+      <h1>User Profiles</h1>
+      <ul className="user-list">
+        <li>John Doe – Admin</li>
+        <li>Jane Smith – Analyst</li>
+        <li>Rahul Sharma – User</li>
       </ul>
     </div>
   );
 }
 
-export default Users;
+export default UserProfiles;

@@ -1,36 +1,35 @@
 import React from "react";
-import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 
-// importing the same components but will keep coding style more natural
 import Sidebar from "./components/Sidebar";
 import Navbar from "./components/Navbar";
 
 import Dashboard from "./pages/Dashboard";
-import RiskHeatmapPage from "./pages/RiskHeatmapPage";
+import RiskHeatmap from "./pages/RiskHeatmapPage";
 import UserProfiles from "./pages/UserProfiles";
 import SystemStatus from "./pages/SystemStatus";
 
 function App() {
   return (
-    <BrowserRouter>
-      <div className="flex min-h-screen bg-[#0f0f0f] text-gray-200">
-        {/* left sidebar always visible */}
+    <Router>
+      <div className="flex min-h-screen bg-neutral-950 text-gray-200">
+        {/* Sidebar always visible */}
         <Sidebar />
 
-        {/* right side content */}
-        <div className="flex flex-col flex-1">
+        {/* Right panel with top bar and content */}
+        <div className="flex-1 flex flex-col">
           <Navbar />
-          <div className="p-5 flex-1 overflow-y-auto">
+          <main className="flex-1 p-6 overflow-y-auto">
             <Routes>
               <Route path="/" element={<Dashboard />} />
-              <Route path="/RiskHeatmap" element={<RiskHeatmapPage />} />
+              <Route path="/RiskHeatmap" element={<RiskHeatmap />} />
               <Route path="/UserProfiles" element={<UserProfiles />} />
               <Route path="/SystemStatus" element={<SystemStatus />} />
             </Routes>
-          </div>
+          </main>
         </div>
       </div>
-    </BrowserRouter>
+    </Router>
   );
 }
 
