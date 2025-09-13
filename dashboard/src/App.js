@@ -1,55 +1,57 @@
-import React, { useState } from "react";
-import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import React, { useState, useEffect } from "react";
 
 import Sidebar from "./components/Sidebar";
-import Navbar from "./components/Navbar";
 import Dashboard from "./pages/Dashboard";
-import IntroScreen from "./components/IntroScreen";
+import RiskHeatmapPage from "./pages/RiskHeatmapPage";
+import CommunicationGraph from "./components/CommunicationGraph";
+import UserProfilesPage from "./pages/UserProfiles";
 
-// Simple placeholder page for unfinished routes
 const ComingSoon = ({ title }) => (
   <div className="text-center text-gray-400 mt-20 text-lg font-mono">
     ⚡ {title} module is still under construction…
   </div>
 );
 
-function App() {
-  const [introDone, setIntroDone] = useState(false);
+const App = () => {
+  const [currentPage, setCurrentPage] = useState("Dashboard");
+  const [currentTime, setCurrentTime] = useState(new Date());
 
-  // IntroScreen will call this AFTER all messages finish typing
-  const handleIntroFinish = () => setIntroDone(true);
+  useEffect(() => {
+    const timer = setInterval(() => setCurrentTime(new Date()), 1000);
+    return () => clearInterval(timer);
+  }, []);
 
-  if (!introDone) {
-    return <IntroScreen onFinish={handleIntroFinish} />;
-  }
+  const renderPage = () => {
+    switch (currentPage) {
+      case "Dashboard":
+        return <Dashboard />;
+      case "Risk Heatmap":
+        return <RiskHeatmapPage />;
+      case "User Profiles":
+        return <UserProfilesPage/>;
+      case "Communication":
+        return <CommunicationGraph />;
+      default:
+        return <ComingSoon title={currentPage} />;
+    }
+  };
 
   return (
-    <Router>
-      <div className="flex min-h-screen bg-neutral-950 text-gray-200">
-        {/* Left navigation */}
-        <Sidebar />
-
-        {/* Right content */}
-        <div className="flex-1 flex flex-col">
-          <Navbar />
-          <main className="flex-1 p-6 overflow-y-auto">
-            <Routes>
-              <Route path="/" element={<Dashboard />} />
-              <Route path="/risk-heatmap" element={<ComingSoon title="Risk Heatmap" />} />
-              <Route path="/user-profiles" element={<ComingSoon title="User Profiles" />} />
-              <Route path="/communication" element={<ComingSoon title="Communication" />} />
-              <Route path="/arents" element={<ComingSoon title="Arents" />} />
-              <Route path="/scanner" element={<ComingSoon title="Attachment Scanner" />} />
-              <Route path="/alerts" element={<ComingSoon title="Alerts" />} />
-              <Route path="/settings" element={<ComingSoon title="System Status" />} />
-              <Route path="/reports" element={<ComingSoon title="Reports" />} />
-              <Route path="/app-settings" element={<ComingSoon title="Settings" />} />
-            </Routes>
-          </main>
+    <div className="min-h-screen bg-gray-900 text-white flex">
+      <Sidebar currentPage={currentPage} setCurrentPage={setCurrentPage} />
+      <div className="flex-1 p-8">
+        <div className="flex justify-between items-center mb-8">
+          <h1 className="text-2xl font-bold">{currentPage}</h1>
+          <div className="flex items-center space-x-4">
+            <span className="text-gray-400">
+              {currentTime.toLocaleString()}
+            </span>
+          </div>
         </div>
+        {renderPage()}
       </div>
-    </Router>
+    </div>
   );
-}
+};
 
 export default App;

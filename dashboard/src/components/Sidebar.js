@@ -1,49 +1,89 @@
-import { Link } from "react-router-dom";
-import {
-  Home,
-  Grid,
-  Users,
-  MessageCircle,
-  Shield,
-  FileText,
-  Bell,
-  Server,
-  Settings,
-} from "lucide-react";
+import React from 'react';
+import { 
+  Eye, Home, Map, Users, MessageSquare, Shield, Bell, 
+  FileText, Activity, Settings 
+} from 'lucide-react';
 
-function Sidebar() {
-  const menuItems = [
-    { name: "Dashboard", icon: Home, path: "/" },
-    { name: "Risk Heatmap", icon: Grid, path: "/risk-heatmap" },
-    { name: "User Profiles", icon: Users, path: "/user-profiles" },
-    { name: "Communication", icon: MessageCircle, path: "/communication" },
-    { name: "Arents", icon: Shield, path: "/arents" },
-    { name: "Attachment Scanner", icon: FileText, path: "/scanner" },
-    { name: "Alerts", icon: Bell, path: "/alerts" },
-    { name: "System Status", icon: Server, path: "/settings" },
-    { name: "Reports", icon: FileText, path: "/reports" },
-    { name: "Settings", icon: Settings, path: "/app-settings" },
-  ];
+const Sidebar = ({ currentPage, setCurrentPage }) => {
+  const MenuItem = ({ icon: Icon, label, active = false, onClick }) => (
+    <div 
+      className={`flex items-center px-4 py-3 rounded-lg cursor-pointer transition-colors ${
+        active ? 'bg-blue-600 text-white' : 'text-gray-300 hover:bg-gray-700'
+      }`}
+      onClick={() => onClick(label)}
+    >
+      <Icon size={20} className="mr-3" />
+      <span className="font-medium">{label}</span>
+    </div>
+  );
 
   return (
-    <aside className="w-64 bg-neutral-900 border-r border-neutral-800 p-4">
-      <h2 className="text-xl font-bold mb-6 flex items-center gap-2">
-        👁 Internal Eye
-      </h2>
-      <nav className="space-y-1">
-        {menuItems.map((item, i) => (
-          <Link
-            key={i}
-            to={item.path}
-            className="flex items-center gap-3 px-3 py-2 rounded-md hover:bg-neutral-800 transition"
-          >
-            <item.icon size={18} />
-            <span>{item.name}</span>
-          </Link>
-        ))}
-      </nav>
-    </aside>
+    <div className="w-64 bg-gray-800 p-6 space-y-4">
+      {/* Logo */}
+      <div className="flex items-center mb-8">
+        <Eye size={32} className="text-blue-500 mr-3" />
+        <h1 className="text-xl font-bold">Internal Eye</h1>
+      </div>
+
+      {/* Menu Items */}
+      <div className="space-y-2">
+        <MenuItem 
+          icon={Home} 
+          label="Dashboard" 
+          active={currentPage === 'Dashboard'} 
+          onClick={setCurrentPage} 
+        />
+        <MenuItem 
+          icon={Map} 
+          label="Risk Heatmap" 
+          active={currentPage === 'Risk Heatmap'} 
+          onClick={setCurrentPage} 
+        />
+        <MenuItem 
+          icon={Users} 
+          label="User Profiles" 
+          active={currentPage === 'User Profiles'} 
+          onClick={setCurrentPage} 
+        />
+        <MenuItem 
+          icon={MessageSquare} 
+          label="Communication" 
+          active={currentPage === 'Communication'} 
+          onClick={setCurrentPage} 
+        />
+        <MenuItem 
+          icon={Shield} 
+          label="Alerts" 
+          active={currentPage === 'Alerts'} 
+          onClick={setCurrentPage} 
+        />
+        <MenuItem 
+          icon={FileText} 
+          label="Attachment Scanner" 
+          active={currentPage === 'Attachment Scanner'} 
+          onClick={setCurrentPage} 
+        />
+        <MenuItem 
+          icon={Bell} 
+          label="System Status" 
+          active={currentPage === 'System Status'} 
+          onClick={setCurrentPage} 
+        />
+        <MenuItem 
+          icon={Activity} 
+          label="Reports" 
+          active={currentPage === 'Reports'} 
+          onClick={setCurrentPage} 
+        />
+        <MenuItem 
+          icon={Settings} 
+          label="Settings" 
+          active={currentPage === 'Settings'} 
+          onClick={setCurrentPage} 
+        />
+      </div>
+    </div>
   );
-}
+};
 
 export default Sidebar;

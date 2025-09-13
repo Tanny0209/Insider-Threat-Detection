@@ -1,27 +1,19 @@
-import { Search, Bell, User } from "lucide-react";
+// import React, { useState, useEffect } from "react";
 
-function Navbar() {
-  return (
-    <header className="bg-neutral-900 border-b border-neutral-800 px-6 py-3 flex justify-between items-center">
-      <h1 className="text-lg font-semibold tracking-wide">Internal Eye Dashboard</h1>
+// const Navbar = () => {
+//   const [currentTime, setCurrentTime] = useState(new Date());
 
-      {/* Search box */}
-      <div className="flex-1 mx-6">
-        <div className="relative">
-          <Search className="absolute left-3 top-2.5 text-gray-500" size={16} />
-          <input
-            placeholder="Search..."
-            className="w-full bg-neutral-800 rounded-md pl-9 pr-3 py-2 text-sm outline-none focus:ring-1 focus:ring-blue-500"
-          />
-        </div>
-      </div>
+//   useEffect(() => {
+//     const timer = setInterval(() => setCurrentTime(new Date()), 1000);
+//     return () => clearInterval(timer);
+//   }, []);
 
-      <div className="flex items-center gap-6">
-        <Bell className="cursor-pointer hover:text-blue-400" />
-        <User className="cursor-pointer hover:text-blue-400" />
-      </div>
-    </header>
-  );
-}
+//   return (
+//     <div className="flex justify-between items-center p-4 bg-gray-800 text-white">
+//       <h1 className="text-xl font-bold">Dashboard</h1>
+//       <span>{currentTime.toLocaleString()}</span>
+//     </div>
+//   );
+// };
 
-export default Navbar;
+// export default Navbar;

@@ -16,20 +16,17 @@ function IntroScreen({ onFinish }) {
 
   useEffect(() => {
     if (stepIndex >= steps.length) {
-      // all steps done → trigger exit
       const timer = setTimeout(() => onFinish?.(), 600);
       return () => clearTimeout(timer);
     }
 
     if (charIndex < steps[stepIndex].length) {
-      // typing current line
       const timer = setTimeout(() => {
         setCurrentText(prev => prev + steps[stepIndex][charIndex]);
         setCharIndex(c => c + 1);
       }, 40);
       return () => clearTimeout(timer);
     } else {
-      // finished a line → short pause, then next
       const timer = setTimeout(() => {
         setStepIndex(i => i + 1);
         setCharIndex(0);
@@ -41,7 +38,6 @@ function IntroScreen({ onFinish }) {
 
   return (
     <div className="flex flex-col items-center justify-center h-screen bg-black text-green-400 font-mono">
-      {/* Spinning scanner ring */}
       <motion.div
         initial={{ scale: 0.7, opacity: 0 }}
         animate={{ scale: 1, opacity: 1, rotate: 360 }}
@@ -49,7 +45,6 @@ function IntroScreen({ onFinish }) {
         className="w-24 h-24 mb-10 rounded-full border-4 border-green-500 border-t-transparent shadow-[0_0_25px_#22c55e]"
       />
 
-      {/* Typing boot messages */}
       <div className="text-lg md:text-xl whitespace-pre text-center mb-8">
         {currentText}
         <motion.span
@@ -59,7 +54,6 @@ function IntroScreen({ onFinish }) {
         />
       </div>
 
-      {/* BIG Internal Eye branding */}
       <motion.h1
         initial={{ opacity: 0, scale: 0.8 }}
         animate={{ opacity: 1, scale: 1 }}
