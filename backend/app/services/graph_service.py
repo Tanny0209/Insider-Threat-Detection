@@ -1,63 +1,96 @@
+# backend/app/services/build_user_graph.py
+import argparse
+import pickle
 import pandas as pd
 import networkx as nx
-import pickle
+import os
+import torch
+from torch_geometric.utils import from_networkx
 
 
-def build_graph(csv_path: str):
-    # Load dataset
+def extract_domain(email):
+    try:
+        return email.split("@")[-1].lower().strip()
+    except Exception:
+        return "unknown"
+
+
+def build_graph(csv_path: str, out_graph_pkl: str, out_pyg_pt: str, out_node_list: str):
+    print(f"Loading CSV: {csv_path}")
     df = pd.read_csv(csv_path, low_memory=False)
 
-    # Init directed graph
-    G = nx.DiGraph()
+    if "from_user" not in df.columns or "to_users" not in df.columns:
+        raise ValueError("CSV must contain 'from_user' and 'to_users' columns.")
 
+    # Normalize
+    df["from_user"] = df["from_user"].astype(str).str.lower().str.strip()
+    df["to_users"] = df["to_users"].fillna("").astype(str)
+
+    G = nx.DiGraph()
     dropped_senders = 0
     dropped_recipients = 0
 
     for _, row in df.iterrows():
-        sender = row['from_user']
-
-        # Skip invalid senders
-        if pd.isna(sender) or not str(sender).strip() or str(sender).lower() == "nan":
+        sender = row["from_user"]
+        if pd.isna(sender) or sender == "" or str(sender).lower() == "nan":
             dropped_senders += 1
             continue
 
-        recipients = str(row['to_users']).split(';') if pd.notna(row['to_users']) else []
+        recipients = [r.strip().lower() for r in str(row["to_users"]).split(";") if r and str(r).strip().lower() != "nan"]
+
+        if len(recipients) == 0:
+            dropped_recipients += 1
+            continue
 
         for r in recipients:
-            r = str(r).strip()
-            if not r or r.lower() == "nan":
-                dropped_recipients += 1
-                continue
+            # add node attrs optionally
+            if not G.has_node(sender):
+                G.add_node(sender, domain=extract_domain(sender))
+            if not G.has_node(r):
+                G.add_node(r, domain=extract_domain(r))
 
             if G.has_edge(sender, r):
-                G[sender][r]['emails'] += 1
-                if row['contains_sensitive_keywords']:
-                    G[sender][r]['sensitive_count'] += 1
+                # increment existing
+                G[sender][r]["emails"] = G[sender][r].get("emails", 0) + 1
+                if row.get("contains_sensitive_keywords", False):
+                    G[sender][r]["sensitive_count"] = G[sender][r].get("sensitive_count", 0) + 1
             else:
-                G.add_edge(
-                    sender,
-                    r,
-                    emails=1,
-                    sensitive_count=1 if row['contains_sensitive_keywords'] else 0
-                )
+                G.add_edge(sender, r,
+                           emails=1,
+                           sensitive_count=1 if row.get("contains_sensitive_keywords", False) else 0)
 
     print("Graph summary:")
-    print(f"Nodes: {G.number_of_nodes()}")
-    print(f"Edges: {G.number_of_edges()}")
-    print(f"Dropped invalid senders: {dropped_senders}")
-    print(f"Dropped invalid recipients: {dropped_recipients}")
+    print(f" Nodes: {G.number_of_nodes()}")
+    print(f" Edges: {G.number_of_edges()}")
+    print(f" Dropped invalid senders: {dropped_senders}")
+    print(f" Dropped invalid recipients: {dropped_recipients}")
 
-    # Print a few edges with attributes
-    for u, v, d in list(G.edges(data=True))[:5]:
-        print(f"{u} -> {v} {d}")
-
-    # ✅ Save graph to pickle file
-    with open("backend/app/data/user_graph.pkl", "wb") as f:
+    # Save NetworkX graph .pkl
+    os.makedirs(os.path.dirname(out_graph_pkl), exist_ok=True)
+    with open(out_graph_pkl, "wb") as f:
         pickle.dump(G, f)
-    print("✅ Saved graph as backend/app/data/user_graph.pkl")
+    print(f"✅ Saved NetworkX graph: {out_graph_pkl}")
 
-    return G
+    # Also convert to PyG Data object and save (keeps parity)
+    data = from_networkx(G)
+    torch.save(data, out_pyg_pt, _use_new_zipfile_serialization=True)
+    print(f"✅ Saved PyG graph: {out_pyg_pt}")
+
+    # Save node list ordering (useful for alignment later)
+    node_list = list(G.nodes())
+    with open(out_node_list, "wb") as f:
+        pickle.dump(node_list, f)
+    print(f"✅ Saved node list: {out_node_list}")
+
+    return G, data, node_list
 
 
 if __name__ == "__main__":
-    graph = build_graph("backend/app/data/Emails.csv")
+    p = argparse.ArgumentParser()
+    p.add_argument("--csv", default="backend/app/data/Emails.csv")
+    p.add_argument("--out_graph_pkl", default="backend/app/data/user_graph.pkl")
+    p.add_argument("--out_pyg_pt", default="backend/app/data/pyg_graph.pt")
+    p.add_argument("--out_node_list", default="backend/app/data/node_list.pkl")
+    args = p.parse_args()
+
+    build_graph(args.csv, args.out_graph_pkl, args.out_pyg_pt, args.out_node_list)

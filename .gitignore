@@ -7,6 +7,8 @@ __pycache__/
 *.pyo
 *.pyd
 
+/1NPDPRO5.XLS
+
 .venv/
 # ====================
 # React / frontend
